@@ -115,7 +115,7 @@ void decibel_rgb(){
     
     if (amplitude < NORMAL) {
         data.H = 0;
-     }
+    }
     else if (amplitude < SUBOPTIMAL){
         data.H = 0.5;
     }
@@ -134,7 +134,7 @@ void decibel_rgb(){
 int main(void){
     
     normal_rgb();
-    decible_rbg();
+    decibel_rgb();
     
     return 0;
 }
