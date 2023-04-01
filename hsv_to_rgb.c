@@ -90,8 +90,8 @@ struct RGB HSVToRGB(struct HSV hsv) {
     return rgb;
 }
 
-int main(void){
-    const double speed = 343; 
+void normal_rgb(){
+    const double speed = 343;
     double freq = 1;
 
     struct HSV data = { speed/freq , 1.00, 0.36 };
@@ -100,6 +100,39 @@ int main(void){
     printf("%d\n", value.B );
     printf("%d\n", value.G);
     printf("%d\n", value.R);
+}
+
+void decible_rgb(){
+    double amplitude = 798;
+    
+    int NORMAL = 60; //green
+    int SUBOPTIMAL = 85; //yellow
+    int POOR = 95; //red flashing
+    //everything else will be unacceptable
+    //flashing super hard
+    
+    struct HSV data = { , 1.00, 0.36};
+    
+    if (amplitude < NORMAL):
+        data = {};
+    else if (amplitude < SUBOPTIMAL):
+        data = {};
+    else if (amiplitude < POOR):
+        
+    
+    struct RBG value = HSVToRGB(data);
+    
+    printf("%d\n", value.B );
+    printf("%d\n", value.G);
+    printf("%d\n", value.R);
+}
+
+int main(void){
+    
+    normal_rgb();
+    decible_rbg();
     
     return 0;
 }
+
+
