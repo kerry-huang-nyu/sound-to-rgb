@@ -86,7 +86,6 @@ struct RGB HSVToRGB(struct HSV hsv) {
     rgb.R = r * 255;
     rgb.G = g * 255;
     rgb.B = b * 255;
-
     return rgb;
 }
 

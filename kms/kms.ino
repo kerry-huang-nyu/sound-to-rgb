@@ -23,6 +23,8 @@ float vals[3];
 // float lmao_mag = 0;
 
 fft_config_t *real_fft_plan = fft_init(FFT_N, FFT_REAL, FFT_FORWARD, fft_input, fft_output);
+HSV hsv;
+RGB rgb;
 
 int i2s_read_b(i2s_port_t i2s_num, void *dest, size_t size, TickType_t ticks_to_wait)
 {
@@ -263,7 +265,7 @@ void loop() {
     const double MIN_AMP = 0;
     const double MAX_AMP = 4000;
     readMicNoiseLevel();
-    float wavelength = SONIC_SPEED / (vals[1]);
+    float wavelength = min((SONIC_SPEED / (vals[1]) / 11.0), 300.0);
     float brightness = min((vals[2] - MIN_AMP) / (MAX_AMP - MIN_AMP), 1.0);
 
     // Serial.println(vals[0]);
@@ -274,6 +276,31 @@ void loop() {
     // Serial.print(wavelength);
     // Serial.print(", brightness: ");
     // Serial.println(brightness);
-    
-    
+    hsv.H=360.0 - wavelength;
+    hsv.S=1.00;
+    hsv.V=brightness;
+    RGB temp = HSVToRGB(hsv);
+    rgb.R = temp.R;
+    rgb.G = temp.G;
+    rgb.B = temp.B;
+    if (brightness > 0.1) {
+      Serial.print("wavelength: ");
+      Serial.print(wavelength);
+      Serial.print(", brightness: ");
+      Serial.println(brightness);
+      Serial.print("(R,G,B) = (");
+      Serial.print(rgb.R);
+      Serial.print(",");
+      Serial.print(rgb.G);
+      Serial.print(",");
+      Serial.print(rgb.B);
+      Serial.println(")");
+    }
+    // Serial.print("(R,G,B) = (");
+    // Serial.print(rgb.R);
+    // Serial.print(",");
+    // Serial.print(rgb.G);
+    // Serial.print(",");
+    // Serial.println(rgb.B);
+    // Serial.println(")");    
 }
