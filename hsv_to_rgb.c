@@ -102,7 +102,7 @@ void normal_rgb(){
     printf("%d\n", value.R);
 }
 
-void decible_rgb(){
+void decibel_rgb(){
     double amplitude = 798;
     
     int NORMAL = 60; //green
@@ -111,16 +111,20 @@ void decible_rgb(){
     //everything else will be unacceptable
     //flashing super hard
     
-    struct HSV data = { , 1.00, 0.36};
+    struct HSV data = {amplitude, 1.00, 0.36};
     
-    if (amplitude < NORMAL):
-        data = {};
-    else if (amplitude < SUBOPTIMAL):
-        data = {};
-    else if (amiplitude < POOR):
+    if (amplitude < NORMAL) {
+        data.H = 0;
+    }
+    else if (amplitude < SUBOPTIMAL){
+        data.H = 0.5;
+    }
+    else if (amplitude < POOR){
+        data.H = 1;
+    }
         
     
-    struct RBG value = HSVToRGB(data);
+    struct RGB value = HSVToRGB(data);
     
     printf("%d\n", value.B );
     printf("%d\n", value.G);
@@ -130,7 +134,7 @@ void decible_rgb(){
 int main(void){
     
     normal_rgb();
-    decible_rbg();
+    decibel_rgb();
     
     return 0;
 }
