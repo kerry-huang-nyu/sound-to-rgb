@@ -17,6 +17,7 @@ double ffArr[64];
 int top = 0;
 int last = 0;
 char print_buf[300];
+float vals[3];
 
 // float lmao_freq = 0;
 // float lmao_mag = 0;
@@ -83,7 +84,7 @@ int readMic() {
   }
 }
 
-double* readMicNoiseLevel() {
+void readMicNoiseLevel() {
   int32_t samples[BLOCK_SIZE];
   size_t bytes_read = 0;
   
@@ -139,11 +140,12 @@ double* readMicNoiseLevel() {
 
     float mag;
     float freq;
+    max_magnitude = 1e-8;
     for (int k = 1 ; k < real_fft_plan->size / 2 ; k++)
     {
     /*The real part of a magnitude at a frequency is followed by the corresponding imaginary part in the output*/
       mag = sqrt(pow(real_fft_plan->output[2*k],2) + pow(real_fft_plan->output[2*k+1],2))/1;
-
+      
       freq = k*1.0/TOTAL_TIME;
   //    sprintf(print_buf,"%f Hz : %f", freq, mag);
   //    Serial.println(print_buf);
@@ -154,7 +156,7 @@ double* readMicNoiseLevel() {
       }
     }
 
-    max_magnitude = 1e-8;
+    
 
     mean = 0;
     for (int i = 0; i < samples_read; ++i) {
@@ -162,6 +164,7 @@ double* readMicNoiseLevel() {
     }
     mean = mean / samples_read;
 
+    /*
     Serial.print("Pressure:");
     Serial.print( mean );
     Serial.print(",");
@@ -170,9 +173,10 @@ double* readMicNoiseLevel() {
     Serial.print(",");
     Serial.print("Magnitude:");
     Serial.println((max_magnitude/10000)*2/FFT_N);
-
-    double output[] = {mean, fundamental_freq, (max_magnitude/10000)*2/FFT_N};
-    return output;
+ */
+    vals[0] = mean;
+    vals[1] = fundamental_freq;
+    vals[2] = (max_magnitude/100000)*2/FFT_N;
   }
 }
 
@@ -205,6 +209,8 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Configuring I2S...");
 
+  led_setup();
+
   esp_err_t err;
 
   // The I2S config as per the example
@@ -232,11 +238,13 @@ void setup() {
   err = i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
   if (err != ESP_OK) {
     Serial.printf("Failed installing driver: %d\n", err);
+    exit(0);
     while (true);
   }
   err = i2s_set_pin(I2S_PORT, &pin_config);
   if (err != ESP_OK) {
     Serial.printf("Failed setting pin: %d\n", err);
+    exit(0);
     while (true);
   }
   Serial.println("I2S driver installed.");
@@ -252,13 +260,20 @@ void loop() {
 
     //float pressure = readMicNoiseLevel();
     const double SONIC_SPEED = 343;
-    const double MIN_AMP = 50;
-    const double MAX_AMP = 80;
-    double* vals = readMicNoiseLevel();
-    double wavelength = SONIC_SPEED / vals[1];
-    double brightness = (vals[2] - MIN_AMP) / (MAX_AMP - MIN_AMP);
-    Serial.print("wavelength: ");
-    Serial.print(wavelength);
-    Serial.print(", brightness: ");
-    Serial.println(brightness);
+    const double MIN_AMP = 0;
+    const double MAX_AMP = 4000;
+    readMicNoiseLevel();
+    float wavelength = SONIC_SPEED / (vals[1]);
+    float brightness = min((vals[2] - MIN_AMP) / (MAX_AMP - MIN_AMP), 1.0);
+
+    // Serial.println(vals[0]);
+    // Serial.println(vals[1]);
+    
+    
+    // Serial.print("wavelength: ");
+    // Serial.print(wavelength);
+    // Serial.print(", brightness: ");
+    // Serial.println(brightness);
+    
+    
 }

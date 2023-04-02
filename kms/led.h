@@ -1,4 +1,4 @@
-const int PIN_RED   = 1;
+const int PIN_RED   = 21;
 const int PIN_GREEN = 22;
 const int PIN_BLUE  = 23;
 
