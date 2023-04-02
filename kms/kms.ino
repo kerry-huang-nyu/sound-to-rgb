@@ -1,6 +1,8 @@
 #include <driver/i2s.h>
 #include "FFT.h" // include the library
 #include "FFT_signal.h"
+#include "hsv_to_rgb.h"
+
 
 const i2s_port_t I2S_PORT = I2S_NUM_0;
 const int BLOCK_SIZE = 1024;
@@ -166,8 +168,9 @@ int readMicNoiseLevel() {
     Serial.print( fundamental_freq );
     Serial.print(",");
     Serial.print("Magnitude:");
-    Serial.println( (mag/10000)*2/FFT_N );
+    Serial.println((max_magnitude/10000)*2/FFT_N);
 
+    double output[] = {mean, fundamental_freq, (max_magnitude/10000)*2/FFT_N}
     return mean;
   }
 }
@@ -247,7 +250,14 @@ void setup() {
 void loop() {
 
     //float pressure = readMicNoiseLevel();
-
-    readMicNoiseLevel();
-
+    const double SONIC_SPEED = 343;
+    const double MIN_AMP = 50;
+    const double MAX_AMP = 80;
+    double vals[] = readMicNoiseLevel();
+    double wavelength = SONIC_SPEED / vals[1];
+    double brightness = (vals[2] - MIN_AMP) / (MAX_AMP - MIN_AMP);
+    Serial.print("wavelength: ");
+    Serial.print(wavelength);
+    Serial.print(", brightness: ");
+    Serial.println(brightness);
 }
