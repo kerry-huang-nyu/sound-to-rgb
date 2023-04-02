@@ -295,6 +295,7 @@ void loop() {
       Serial.print(",");
       Serial.print(rgb.B);
       Serial.println(")");
+      set_rgb(rgb.R, rgb.G, rgb.B);
     }
     // Serial.print("(R,G,B) = (");
     // Serial.print(rgb.R);
