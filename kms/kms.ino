@@ -2,6 +2,7 @@
 #include "FFT.h" // include the library
 #include "FFT_signal.h"
 #include "hsv_to_rgb.h"
+#include "led.h"
 
 
 const i2s_port_t I2S_PORT = I2S_NUM_0;
@@ -82,7 +83,7 @@ int readMic() {
   }
 }
 
-int readMicNoiseLevel() {
+double* readMicNoiseLevel() {
   int32_t samples[BLOCK_SIZE];
   size_t bytes_read = 0;
   
@@ -170,8 +171,8 @@ int readMicNoiseLevel() {
     Serial.print("Magnitude:");
     Serial.println((max_magnitude/10000)*2/FFT_N);
 
-    double output[] = {mean, fundamental_freq, (max_magnitude/10000)*2/FFT_N}
-    return mean;
+    double output[] = {mean, fundamental_freq, (max_magnitude/10000)*2/FFT_N};
+    return output;
   }
 }
 
@@ -253,7 +254,7 @@ void loop() {
     const double SONIC_SPEED = 343;
     const double MIN_AMP = 50;
     const double MAX_AMP = 80;
-    double vals[] = readMicNoiseLevel();
+    double* vals = readMicNoiseLevel();
     double wavelength = SONIC_SPEED / vals[1];
     double brightness = (vals[2] - MIN_AMP) / (MAX_AMP - MIN_AMP);
     Serial.print("wavelength: ");

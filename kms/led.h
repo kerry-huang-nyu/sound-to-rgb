@@ -4,10 +4,13 @@ const int PIN_BLUE  = 23;
 
 void set_rgb(int r, int g, int b);
 void led_off();
+void led_setup();
 
-pinMode(PIN_RED,   OUTPUT);
-pinMode(PIN_GREEN, OUTPUT);
-pinMode(PIN_BLUE,  OUTPUT);
+void led_setup() {
+  pinMode(PIN_RED,   OUTPUT);
+  pinMode(PIN_GREEN, OUTPUT);
+  pinMode(PIN_BLUE,  OUTPUT);
+}
 
 void set_rgb(int r, int g, int b) {
     analogWrite(PIN_RED,   r);
