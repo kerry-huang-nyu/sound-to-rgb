@@ -279,6 +279,20 @@ void loop() {
     hsv.H=360.0 - wavelength;
     hsv.S=1.00;
     hsv.V=brightness;
+
+    /*
+    float amplitude = (vals[2] - MIN_AMP) / (MAP_AMP - MIN_AMP);
+    if amplitude > 1:
+      hsv.H = 0;
+    else if (amplitude > 0.5):
+      hsv.H = 60;
+    else:
+      hsv.H = 111;
+    hsv.S = 1;
+    hsv.V = 1;
+    
+    */
+
     RGB temp = HSVToRGB(hsv);
     rgb.R = temp.R;
     rgb.G = temp.G;
@@ -297,6 +311,7 @@ void loop() {
       Serial.println(")");
       set_rgb(rgb.R, rgb.G, rgb.B);
     }
+
     // Serial.print("(R,G,B) = (");
     // Serial.print(rgb.R);
     // Serial.print(",");
